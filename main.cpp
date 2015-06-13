@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void showMenu(const BinarySearchTree<Course> * courseTree);
+void showMenu(BinarySearchTree<Course> * courseTree);
 
 // display: function to pass to BST traverse functions
 void display(string & anItem)
@@ -45,25 +45,26 @@ int main()
 	courseTree = new BinarySearchTree < Course > ;
 	
 	CourseDB db;
-	db.buildDatabase("courses1.txt", courseTree);
+	db.buildDatabase("courses.txt", courseTree);
 	showMenu(courseTree);
-
+    
 	return 0;
 }
 
 // showMenu: Prints the selection of choices for the user
-void showMenu(const BinarySearchTree<Course> * courseTree)
+void showMenu(BinarySearchTree<Course> * courseTree)
 {
 	bool done = false;
 	char option;
 	string courseid;
-	cout << "Welcome to the Student Database:" << endl;
+	cout << "Welcome to the Course Database:" << endl;
 	cout << "B - Tree Breadth-First Traversal " << endl;
 	cout << "D - Depth First Traversal " << endl;
 	cout << "I - Iterative Depth-First Traversal " << endl;
 	cout << "T - Print Tree as Indented List " << endl;
 	cout << "S - Search By a Unique key " << endl;
 	cout << "R - Print in Range " << endl;
+    cout << "X - Delete Course " << endl;
 	cout << "H - Help" << endl;
 	cout << "Q - Quit" << endl;
 
@@ -118,6 +119,19 @@ void showMenu(const BinarySearchTree<Course> * courseTree)
 		case 'Q':
 			done = true;
 			break;
+            
+        case 'X':
+            {
+                cout<<"Enter Course ID to delete :";
+                string courseid;
+                cin>>courseid;
+                
+                Course deleteCourse;
+                deleteCourse.setCourseid(courseid);
+                courseTree->remove(deleteCourse);
+                break;
+                
+            }
 
 		case 'H':
 			cout << endl;
@@ -127,6 +141,7 @@ void showMenu(const BinarySearchTree<Course> * courseTree)
 			cout << "T - Print Tree as Indented List" << endl;
 			cout << "S - Search By a Unique key" << endl;
 			cout << "R - Print in Range " << endl;
+            cout << "X - Delete Course " << endl;
 			cout << "H - Help" << endl;
 			cout << "Q - Quit" << endl;
 			break;
@@ -156,7 +171,15 @@ void showMenu(const BinarySearchTree<Course> * courseTree)
 		}
 
 		case 'R':
-		{/*
+		{
+            
+            /*
+            Course minS = courseTree->findSmallest();
+            Course maxS = courseTree->findLargest();
+            minS.print();
+            maxS.print();
+            
+           
 			int minRange;
 			int maxRange;
 
@@ -165,11 +188,11 @@ void showMenu(const BinarySearchTree<Course> * courseTree)
 			bool done = false;
 			do {
 				Course minS, maxS;
-				minS = studentTree.findSmallest();
-				maxS = studentTree.findLargest();
+				minS = courseTree->findSmallest();
+				maxS = courseTree->findLargest();
 
-				int min = minS.getCourseId();
-				int max = maxS.getId();
+				int min = atoi(minS.getCourseid());
+				int max = maxS.getId());
 				cout << endl << "Search Range - Please enter between " << min << " " << max << ":" << endl << endl;
 				cout << "Min: ";
 				cin >> minRange;
@@ -196,7 +219,8 @@ void showMenu(const BinarySearchTree<Course> * courseTree)
 			studentTree.findNodesInRange(minStudent, maxStudent, displayCourse);
 			cout << endl;
 			break;
-			*/
+                */
+			
 
 		}
 		default:

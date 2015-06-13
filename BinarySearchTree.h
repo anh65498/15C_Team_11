@@ -59,8 +59,8 @@ template<class ItemType>
 bool BinarySearchTree<ItemType>::insert(const ItemType & newEntry)
 {
 	BinaryNode<ItemType>* newNodePtr = new BinaryNode<ItemType>(newEntry);
-	rootPtr = _insert(rootPtr, newNodePtr);  
-	count++;
+	this->rootPtr = _insert(this->rootPtr, newNodePtr);
+	this->count++;
 	return true;
 }  
 
@@ -68,7 +68,7 @@ template<class ItemType>
 bool BinarySearchTree<ItemType>::remove(const ItemType & target)
 {
 	bool isSuccessful = false;
-	rootPtr = _remove(rootPtr, target, isSuccessful);
+	this->rootPtr = _remove(this->rootPtr, target, isSuccessful);
 	return isSuccessful; 
 }  
 
@@ -257,12 +257,15 @@ template <class ItemType>
 ItemType BinarySearchTree<ItemType>::findSmallest() const
 {
 	BinaryNode<ItemType> *nodePtr = this->rootPtr;
+    BinaryNode<ItemType> *prevNodePtr = nodePtr;
 	while (nodePtr->getLeftPtr())
 	{
+        prevNodePtr = nodePtr;
 		nodePtr = nodePtr->getLeftPtr();
 	}
-
-	return nodePtr->getItem();
+    
+	//return nodePtr->getItem();
+    return prevNodePtr->getItem();
 }
 
 template <class ItemType>
