@@ -32,7 +32,7 @@ bool CourseDB::buildDatabase(string fileName, BinarySearchTree<Course>  * course
 
 	}
 	string line;
-	while (!infile.eof())
+	while (infile)
 	{
 		string courseid = "";
         string crn;
