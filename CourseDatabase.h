@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Course.h"
 #include "BinarySearchTree.h"
+#include "HashedDictionary.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
@@ -17,14 +18,11 @@ private:
 
 public:
 	CourseDB() {}
-	bool buildDatabase(string fileName, BinarySearchTree<Course>  * courseTree);
-
-
+	bool buildDatabase(string fileName, BinarySearchTree<Course>  * courseTree, HashedDictionary<string,Course> * hashTable);
 };
 
-bool CourseDB::buildDatabase(string fileName, BinarySearchTree<Course>  * courseTree)
+bool CourseDB::buildDatabase(string fileName, BinarySearchTree<Course>  * courseTree, HashedDictionary<string,Course> * hashTable)
 {
-
 	ifstream infile;
 	infile.open(fileName);
 	if (!infile)
@@ -44,22 +42,22 @@ bool CourseDB::buildDatabase(string fileName, BinarySearchTree<Course>  * course
         string start_time;
         string end_time;
 		string location;
-    
+
 
 		getline(infile, line);
 
 		//10286;ACCT001A03;FINAN ACCOUNTNG I;Breen, Mary A.;MTWR;1000;1215;G6
         //courseid,crn,title,instructor,days,start_time,end_time,location
-        
+
 		int index = line.find(';');
 		int start = 0;
 		courseid = line.substr(0, index);
 		start = index + 1;
-        
+
         index = line.find(';', index + 1);
         crn = line.substr(start, index - start);
         start = index + 1;
-        
+
 		index = line.find(';', index + 1);
 		title = line.substr(start, index - start);
 		start = index + 1;
@@ -77,7 +75,7 @@ bool CourseDB::buildDatabase(string fileName, BinarySearchTree<Course>  * course
 		index = line.find(';', index + 1);
 		start_time = line.substr(start, index - start);
 		start = index + 1;
-        
+
         index = line.find(';', index + 1);
         end_time = line.substr(start, index - start);
         start = index + 1;
@@ -85,7 +83,7 @@ bool CourseDB::buildDatabase(string fileName, BinarySearchTree<Course>  * course
         index = line.find(';', index + 1);
         location = line.substr(start, index - start);
         start = index + 1;
-		
+
 		Course c;
 		c.setCourseid(courseid);
 		c.setInstructor(instructor);
@@ -97,7 +95,14 @@ bool CourseDB::buildDatabase(string fileName, BinarySearchTree<Course>  * course
         c.setEndTime(end_time);
 
 		courseTree->insert(c);
-		c.print();
+
+        if(!hashTable->add(c.getCourseid(),c))
+        {
+            //TODO:rejected
+        }
+
+
+		//c.print();
 	}
 	infile.close();
 

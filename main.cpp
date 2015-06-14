@@ -7,10 +7,14 @@
 #include <iomanip>
 #include <fstream>
 #include "CourseDatabase.h"
+#include "HashedDictionary.h"
+
+const int TABLESIZE = 40;
+const int BUCKETSIZE = 10;
 
 using namespace std;
 
-void showMenu(BinarySearchTree<Course> * courseTree);
+void showMenu(BinarySearchTree<Course> * courseTree, HashedDictionary<string,Course> *hashTable);
 
 // display: function to pass to BST traverse functions
 void display(string & anItem)
@@ -41,30 +45,35 @@ void displayCourseWithLevel(Course & anItem, int level)
 
 int main()
 {
+    HashedDictionary<string,Course> *hashTable = 0;
 	BinarySearchTree<Course> * courseTree = 0;
 	courseTree = new BinarySearchTree < Course > ;
-	
+    hashTable = new HashedDictionary<string,Course>(TABLESIZE,BUCKETSIZE);
 	CourseDB db;
-	db.buildDatabase("courses.txt", courseTree);
-	showMenu(courseTree);
-    
+	db.buildDatabase("courses.txt", courseTree, hashTable);
+	showMenu(courseTree,hashTable);
+
 	return 0;
 }
 
 // showMenu: Prints the selection of choices for the user
-void showMenu(BinarySearchTree<Course> * courseTree)
+void showMenu(BinarySearchTree<Course> * courseTree, HashedDictionary<string,Course> * hashTable)
 {
 	bool done = false;
 	char option;
 	string courseid;
 	cout << "Welcome to the Course Database:" << endl;
-	cout << "B - Tree Breadth-First Traversal " << endl;
-	cout << "D - Depth First Traversal " << endl;
-	cout << "I - Iterative Depth-First Traversal " << endl;
-	cout << "T - Print Tree as Indented List " << endl;
-	cout << "S - Search By a Unique key " << endl;
-	cout << "R - Print in Range " << endl;
-    cout << "X - Delete Course " << endl;
+	cout << "Binary Search Tree" << endl;
+	cout << "\tB - Tree Breadth-First Traversal " << endl;
+	cout << "\tB - Tree Breadth-First Traversal " << endl;
+	cout << "\tD - Depth First Traversal " << endl;
+	cout << "\tI - Iterative Depth-First Traversal " << endl;
+	cout << "\tT - Print Tree as Indented List " << endl;
+	cout << "\tS - Search By a Unique key " << endl;
+	cout << "\tR - Print in Range " << endl;
+    cout << "\tX - Delete Course " << endl;
+    cout << "Hash Table" << endl;
+    cout << "\tC - Display Collisions" << endl;
 	cout << "H - Help" << endl;
 	cout << "Q - Quit" << endl;
 
@@ -75,7 +84,26 @@ void showMenu(BinarySearchTree<Course> * courseTree)
 
 		switch (toupper(option))
 		{
+        case 'C':
+            {
+            int c = hashTable->getColissions();
+            int full = hashTable->getNumOfFullBuckets();
+            int empty = hashTable->getNumOfEmptyBuckets();
 
+            cout<<endl<<"Statistics:"<<endl;
+            cout<<"Number of Collisions at Index 1 :"<<hashTable->getColissionsAtIndex(1)<<endl;
+
+
+            cout << "Total number of Collisions: " << hashTable->getColissions() << endl;
+
+            cout << "Load Factor: " << hashTable->getLoadFactor() << "%" << endl;
+
+            cout<<"Number of Full Buckets:  "<<full<<endl;
+            cout<<"Number of Empty Buckets:  "<<empty<<endl;
+            cout<<"Average Number of nodes stored per bucket: "<<hashTable->getAverageNumofNodes()<<endl;
+            cout << endl;
+            break;
+            }
 		case 'B':
 			cout << endl;
 			cout << "Breadth-First: ";
@@ -119,18 +147,18 @@ void showMenu(BinarySearchTree<Course> * courseTree)
 		case 'Q':
 			done = true;
 			break;
-            
+
         case 'X':
             {
                 cout<<"Enter Course ID to delete :";
                 string courseid;
                 cin>>courseid;
-                
+
                 Course deleteCourse;
                 deleteCourse.setCourseid(courseid);
                 courseTree->remove(deleteCourse);
                 break;
-                
+
             }
 
 		case 'H':
@@ -172,14 +200,14 @@ void showMenu(BinarySearchTree<Course> * courseTree)
 
 		case 'R':
 		{
-            
+
             /*
             Course minS = courseTree->findSmallest();
             Course maxS = courseTree->findLargest();
             minS.print();
             maxS.print();
-            
-           
+
+
 			int minRange;
 			int maxRange;
 
@@ -220,7 +248,7 @@ void showMenu(BinarySearchTree<Course> * courseTree)
 			cout << endl;
 			break;
                 */
-			
+
 
 		}
 		default:
