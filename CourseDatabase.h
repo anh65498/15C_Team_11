@@ -14,26 +14,71 @@
 class CourseDB
 {
 private:
+    int tableSize;
+    int bucketSize;
 	string fileName;
-
+    BinarySearchTree<Course>* courseTree;
+    HashedDictionary<string,Course> *hashTable;
+    int getFileLines(string);
+    int closestPrime(int);
 public:
-	CourseDB() {}
-	bool buildDatabase(string fileName, BinarySearchTree<Course>  * courseTree, HashedDictionary<string,Course> * hashTable);
+	CourseDB(string,int);
+	BinarySearchTree<Course>* getTree(){return courseTree;}
+	HashedDictionary<string,Course>* getHash(){return hashTable;}
 };
 
-bool CourseDB::buildDatabase(string fileName, BinarySearchTree<Course>  * courseTree, HashedDictionary<string,Course> * hashTable)
-{
-	ifstream infile;
-	infile.open(fileName);
-	if (!infile)
-	{
-		cout << "Error opening input file " << endl;
-		return false;
+int CourseDB::getFileLines(string file){
+    int lines = 0;
+    ifstream infile(file.c_str());
+    if(!infile){cout<<"Error opening input file" << endl; return -1;
+    }else{
+        string line;
+        while(getline(infile,line)){
+            lines++;
+        }
+    }
+    infile.close();
+    return lines;
+}
 
-	}
+bool IsPrime(int number){
+    if (number == 2 || number == 3)
+        return true;
+    if (number % 2 == 0 || number % 3 == 0)
+        return false;
+    int divisor = 6;
+    while (divisor * divisor - 2 * divisor + 1 <= number)
+    {
+        if (number % (divisor - 1) == 0)
+            return false;
+        if (number % (divisor + 1) == 0)
+            return false;
+        divisor += 6;
+
+    }
+    return true;
+}
+
+
+int CourseDB::closestPrime(int a){
+    while (!IsPrime(++a)){ }
+    return a;
+}
+
+CourseDB::CourseDB(string fileName, int buckets)
+{
+    int syze = getFileLines(fileName);
+    tableSize = closestPrime(syze/2);
+    cout << "Object amount:" << syze << endl << "Next prime number for table/2: " << tableSize << endl;
+    bucketSize = buckets;
+    courseTree = new BinarySearchTree < Course > ;
+    hashTable = new HashedDictionary < string, Course >(tableSize,bucketSize);
+
+	ifstream infile;
+	infile.open(fileName.c_str());
+	if (!infile){cout << "Error opening input file " << endl;return;}
 	string line;
-	while (infile)
-	{
+	while (getline(infile, line)){
 		string courseid = "";
         string crn;
 		string title;
@@ -42,9 +87,6 @@ bool CourseDB::buildDatabase(string fileName, BinarySearchTree<Course>  * course
         string start_time;
         string end_time;
 		string location;
-
-
-		getline(infile, line);
 
 		//10286;ACCT001A03;FINAN ACCOUNTNG I;Breen, Mary A.;MTWR;1000;1215;G6
         //courseid,crn,title,instructor,days,start_time,end_time,location
@@ -93,20 +135,12 @@ bool CourseDB::buildDatabase(string fileName, BinarySearchTree<Course>  * course
 		c.setDays(days);
 		c.setStartTime(start_time);
         c.setEndTime(end_time);
+        BinaryNode<Course> *newNode = new BinaryNode<Course>(c);
 
-		courseTree->insert(c);
-
-        if(!hashTable->add(c.getCourseid(),c))
-        {
-            //TODO:rejected
-        }
-
-
-		//c.print();
+		courseTree->insert(newNode);
+		hashTable->add(newNode->getItem().getCourseid(),newNode);
 	}
 	infile.close();
-
-	return true;
 }
 
 #endif

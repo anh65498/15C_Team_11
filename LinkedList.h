@@ -47,8 +47,8 @@ public:
     // Constructor
     LinkedList(){
         
-        head = new ListNode <T> (NULL);
-        //head = new ListNode<T>();
+        head = new ListNode <T> ();
+        //head = new ListNode<T>(NULL);
         tail = NULL;
         count = 0; }
     

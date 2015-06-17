@@ -17,7 +17,7 @@ class HashedDictionary
 {
 private:
 
-    LinkedList<Entry<KeyType,ItemType>*> **hashTable;
+    LinkedList<BinaryNode<ItemType>*> **hashTable;
 
     int tableSize;
     int bucketSize;
@@ -40,22 +40,17 @@ public:
 	ItemType * getItem(const KeyType &searchKey) const;
 
     double getAverageNumofNodes();
-
     int getColissions();
     int getColissionsAtIndex(int index);
-
     int getNumOfEmptyBuckets();
-
     int getNumOfFullBuckets();
-
+    int getBucketSize(){return bucketSize;}
+    int getTableSize(){ return tableSize;}
     void displayHashTableList(void visit(KeyType &k));
-
     void printHashTable(void visit(KeyType & k,int spaces,int index));
-
     double getLoadFactor();
-
     int getHashIndex(const KeyType& searchKey) const;
-    bool add(const KeyType& searchKey, const ItemType& newItem);
+    bool add(const KeyType& searchKey, BinaryNode<ItemType>* newItem);
 };
 
 // getHashIndex: hash function for the unique key, uses first 6 chars of string and sums the numerical equivalents of each character and
@@ -64,10 +59,16 @@ template <class KeyType,class ItemType>
 int HashedDictionary<KeyType,ItemType>::getHashIndex(const KeyType& searchKey) const
 {
     int sum=0;
+    int zeroes = 0;
+    int ones = 0;
     for (int i = 0; i < searchKey.length() ;i++)
     {
-        sum += searchKey[i];
+        if(searchKey[i]=='0') zeroes++;
+        if(searchKey[i]=='1') ones++;
+        sum += (searchKey[i]*searchKey[i]*searchKey[i])*i;
     }
+    sum *= zeroes; //480 to 371 collisions
+    sum *= ones; //371 to 227 collisions
     sum = sum % tableSize;
     return sum;
 }
@@ -122,23 +123,15 @@ void HashedDictionary<KeyType,ItemType>::printHashTable(void visit(KeyType & k,i
 template <class KeyType,class ItemType>
 void HashedDictionary<KeyType,ItemType>::displayHashTableList(void visit(KeyType &k))
 {
-    for(int i=0;i<tableSize;i++)
-    {
-        if(hashTable[i] != 0)
-        {
-            ListNode<Entry<KeyType,ItemType>*> *ptr = hashTable[i]->getHead();
+    for(int i = 0; i < tableSize;i++){
+        if(hashTable[i] != 0){
+            ListNode<BinaryNode<ItemType>*> *ptr = hashTable[i]->getHead();
             ptr = ptr->next;
-            while(ptr != 0)
-            {
-                Entry<KeyType,ItemType>* entry = ptr->value;
-
-                ItemType item = entry->getItem();
-                KeyType k;
-                k = entry->getKey();
-                visit(k);
+            while(ptr!=0){
+                BinaryNode<ItemType>* entry = ptr->value;
+                cout << entry->getItem();
                 ptr = ptr->next;
             }
-
         }
     }
 }
@@ -220,18 +213,15 @@ double HashedDictionary<KeyType,ItemType>::getAverageNumofNodes()
 
 // add: adds the item and key to hash table
 template <class KeyType,class ItemType>
-bool HashedDictionary<KeyType,ItemType>::add(const KeyType& searchKey, const ItemType& newItem)
+bool HashedDictionary<KeyType,ItemType>::add(const KeyType& searchKey, BinaryNode<ItemType>* newItem)
 {
-
     int hashIndex = getHashIndex(searchKey);
 
     if(hashTable[hashIndex] == 0)
     {
-        Entry<KeyType, ItemType> * entryToAddPtr = new Entry<KeyType, ItemType>(searchKey,newItem);
-        hashTable[hashIndex] = new LinkedList<Entry<KeyType,ItemType>*>();
-
-
-        hashTable[hashIndex]->insertNode(entryToAddPtr);
+        //hashTable[hashIndex] = new LinkedList<Entry<KeyType,ItemType>*>();
+        hashTable[hashIndex] = new LinkedList<BinaryNode<ItemType>*>;
+        hashTable[hashIndex]->insertNode(newItem);
         itemCount++;
     }
     else
@@ -240,8 +230,7 @@ bool HashedDictionary<KeyType,ItemType>::add(const KeyType& searchKey, const Ite
         {
             return false;
         }
-        Entry<KeyType, ItemType> * entryToAddPtr = new Entry<KeyType, ItemType>(searchKey,newItem);
-        hashTable[hashIndex]->insertNode(entryToAddPtr);
+        hashTable[hashIndex]->insertNode(newItem);
         itemCount++;
     }
 
@@ -255,7 +244,7 @@ HashedDictionary<KeyType, ItemType>::HashedDictionary(int tablesize,int bucketsi
 
 	tableSize = tablesize;
 
-	hashTable = new LinkedList<Entry<KeyType, ItemType>*> *[tableSize];
+	hashTable = new LinkedList<BinaryNode<ItemType>*> *[tableSize];
 	for (int i = 0; i<tableSize; i++)
 	{
 		hashTable[i] = 0;

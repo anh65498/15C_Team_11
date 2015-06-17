@@ -20,6 +20,8 @@ private:
     string days;
     string location;
     
+    string key;
+    
     //int units;
     //string quarter;
     
@@ -52,6 +54,7 @@ public:
     void setEndTime(const string input) { end_time = input; }
     void setCrn(const string input) { crn = input; }
     void setDays(const string input) { days = input; }
+    void setKey(const string input) { key = input; }
     
     
     // mutators
@@ -64,12 +67,13 @@ public:
     string getStartTime() const{ return start_time; }
     string getEndTime() const{ return end_time; }
     string getDays() const{ return days; }
+    string getKey() const {return key;}
     
     
     // overloads > operator
     bool operator >(const Course & d)
     {
-        if (courseid > d.courseid)
+        if (key > d.key)
             return true;
         else
             return false;
@@ -78,7 +82,7 @@ public:
     // overloads < operator
     bool operator <(const Course & d)
     {
-        if (courseid < d.courseid)
+        if (key < d.key)
             return true;
         else
             return false;
@@ -87,7 +91,7 @@ public:
     // overloads == operator
     bool operator ==(const Course& d)
     {
-        if (courseid == d.courseid)
+        if (key == d.key)
             return true;
         else
             return false;
@@ -96,7 +100,7 @@ public:
     // overloads >= operator
     bool operator >=(const Course & d)
     {
-        if (courseid >= d.courseid)
+        if (key >= d.key)
             return true;
         else
             return false;
@@ -105,10 +109,16 @@ public:
     // overloads <= operator
     bool operator <=(const Course & d)
     {
-        if (courseid <= d.courseid)
+        if (key <= d.key)
             return true;
         else
             return false;
+    }
+    
+    friend ostream & operator<<(ostream &o, const Course& c)
+    {
+        o << c.courseid << ";" << c.crn << ";" << c.title << ";" << c.instructor << ";" << c.days << ";" << c.start_time << ";" << c.end_time << ";" << c.location<< endl;
+        return o;
     }
     
     

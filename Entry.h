@@ -11,7 +11,7 @@ class Entry
 private:
     ItemType item;
     KeyType searchKey;
-    
+
 	//mutators
 	void setItem(const ItemType& newEntry)
 	{
@@ -21,7 +21,7 @@ private:
     {
         searchKey = key;
 	}
-    
+
 public:
     Entry() {};
     Entry(ItemType newEntry, KeyType key)
@@ -39,14 +39,14 @@ public:
     KeyType getKey() const {return searchKey;};
 
     bool operator==(const Entry<KeyType, ItemType>& rightHandItem) const;
-    
-}; 
+
+};
 
 //overloads operator ==
 template <class KeyType, class ItemType>
 bool Entry<KeyType, ItemType>::operator==(const Entry<KeyType, ItemType>& rightHandItem) const
 {
     return (searchKey == rightHandItem.getKey());
-}  
+}
 
 #endif

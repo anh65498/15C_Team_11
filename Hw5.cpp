@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "HashedDictionary.h"
-#include "Toy.h"
+//#include "Toy.h"
 
 // displayKey: displays the unique key, the name of each toy
 void displayKey(string &s)

@@ -1,7 +1,7 @@
 // Binary tree abstract base class
 // Created by Frank M. Carrano and Tim Henry.
 // Modified by:
- 
+
 #ifndef _BINARY_TREE
 #define _BINARY_TREE
 
@@ -23,7 +23,7 @@ public:
 	BinaryTree(const BinaryTree<ItemType> & tree){ }
 	virtual ~BinaryTree() { }
 	BinaryTree & operator = (const BinaryTree & sourceTree);
-   
+
 	// common functions for all binary trees
 
 	//checks if tree is empty
@@ -44,12 +44,7 @@ public:
 
 	// abstract functions to be implemented by derived class
 
-	//inserts node into bst
-	virtual bool insert(const ItemType & newData) = 0; 
-	//removes node from bst
-	virtual bool remove(const ItemType & data) = 0; 
-	//finds and returns entry from bst
-	virtual bool getEntry(const ItemType & anEntry, ItemType & returnedItem) const = 0;
+
 
 	//iterative preorder traversal
 	void preOrderiter(void visit(ItemType &)) const { _preorderiter(visit, rootPtr); }
@@ -58,7 +53,7 @@ public:
 	//iterative postorder traversal
 	void postOrderiter(void visit(ItemType &)) const{ _postorderiter(visit, rootPtr); }
 
-private:   
+private:
 	// delete all nodes from the tree
 	void destroyTree(BinaryNode<ItemType>* nodePtr);
 
@@ -81,13 +76,13 @@ private:
 	void _inorderiter(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const;
 	//iterative postorder traversal
 	void _postorderiter(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const;
-   
-}; 
+
+};
 
 //////////////////////////////////////////////////////////////////////////
 
 template<class ItemType>
-BinaryNode<ItemType>* BinaryTree<ItemType>::copyTree(const BinaryNode<ItemType>* nodePtr) 
+BinaryNode<ItemType>* BinaryTree<ItemType>::copyTree(const BinaryNode<ItemType>* nodePtr)
 {
 	BinaryNode<ItemType>* newNodePtr = 0;
 	if (nodePtr != 0)
@@ -102,10 +97,10 @@ BinaryNode<ItemType>* BinaryTree<ItemType>::copyTree(const BinaryNode<ItemType>*
 			newNodePtr->setRightPtr(copyTree(nodePtr->getRightPtr()));
 		}
 	}
-    
-   
+
+
     return newNodePtr;
-}  
+}
 
 template<class ItemType>
 void BinaryTree<ItemType>::destroyTree(BinaryNode<ItemType>* nodePtr)
@@ -120,12 +115,12 @@ void BinaryTree<ItemType>::destroyTree(BinaryNode<ItemType>* nodePtr)
 		{
 			destroyTree(nodePtr->getRightPtr());
 		}
-		
+
 		ItemType item;
 		item = nodePtr->getItem();
 		delete nodePtr;
 	}
-}  
+}
 
 template<class ItemType>
 void BinaryTree<ItemType>::_preorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const
@@ -136,8 +131,8 @@ void BinaryTree<ItemType>::_preorder(void visit(ItemType &), BinaryNode<ItemType
 		visit(item);
 		_preorder(visit, nodePtr->getLeftPtr());
 		_preorder(visit, nodePtr->getRightPtr());
-	} 
-}  
+	}
+}
 
 template<class ItemType>
 void BinaryTree<ItemType>::_inorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const
@@ -149,7 +144,7 @@ void BinaryTree<ItemType>::_inorder(void visit(ItemType &), BinaryNode<ItemType>
 		visit(item);
 		_inorder(visit, nodePtr->getRightPtr());
 	}
-}  
+}
 
 template<class ItemType>
 void BinaryTree<ItemType>::_postorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const
@@ -161,7 +156,7 @@ void BinaryTree<ItemType>::_postorder(void visit(ItemType &), BinaryNode<ItemTyp
 		ItemType item = nodePtr->getItem();
 		visit(item);
 	}
-}  
+}
 
 template<class ItemType>
 void BinaryTree<ItemType>:: _levelorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const
@@ -173,7 +168,7 @@ void BinaryTree<ItemType>:: _levelorder(void visit(ItemType &), BinaryNode<ItemT
 	{
 		BinaryNode<ItemType> * tempnode;
 		bool success = q.dequeue(tempnode);
-		
+
 		if (success)
 		{
 			if (tempnode->getLeftPtr() != 0)
@@ -184,7 +179,7 @@ void BinaryTree<ItemType>:: _levelorder(void visit(ItemType &), BinaryNode<ItemT
 			{
 				q.enqueue(tempnode->getRightPtr());
 			}
-			
+
 			ItemType item = tempnode->getItem();
 			visit(item);
 		}
@@ -202,7 +197,7 @@ BinaryTree<ItemType> & BinaryTree<ItemType>::operator=(const BinaryTree<ItemType
 	}
 
 	return *this;
-}  
+}
 
 template <class ItemType>
 void BinaryTree<ItemType>::_preorderiter(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const
