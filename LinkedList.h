@@ -1,4 +1,3 @@
-// Modified by: Rohan Uppuluri
 // A class template for holding a linked list.
 // The node type is also a class template.
 
@@ -29,6 +28,8 @@ public:
     
     // Constructor
     ListNode(T nodeValue){ value = nodeValue; next = NULL; prev = NULL; }
+    
+    
 };
 
 //*********************************************
@@ -48,7 +49,7 @@ public:
     LinkedList(){
         
         head = new ListNode <T> ();
-        //head = new ListNode<T>(NULL);
+        //head = new ListNode<T>();
         tail = NULL;
         count = 0; }
     
@@ -59,6 +60,7 @@ public:
     int getCount() {return count;}
     void insertNode(T);
     void insertFront(T);
+    bool deleteNode(T nodeValue);
     // delete
     // search
     // other linked list operations ...
@@ -159,7 +161,7 @@ void LinkedList<T>::displayList() const
     // the list.
     while (nodePtr)
     {
-        std::cout << &nodePtr->value << std::endl;  // Display the value in this node.
+        std::cout << nodePtr->value << std::endl;  // Display the value in this node.
         nodePtr = nodePtr->next;         // Move to the next node.
     }
 }
@@ -210,5 +212,54 @@ LinkedList<T>::~LinkedList()
         // Position nodePtr at the next node.
         nodePtr = nextNode;
     }
+}
+
+/*
+ Deletes the node from the list
+ */
+
+template <class T>
+bool LinkedList<T>::deleteNode(T nodeValue)
+
+{
+    ListNode<T> *nodePtr;   // To traverse the list
+    ListNode<T> *nextNode;  // To point to the next node
+    
+    // Position nodePtr at the head of the list.
+    nodePtr = head->next;
+    
+    // While nodePtr is not at the end of the list...
+    
+    while (nodePtr != NULL)
+    {
+        
+        //if(nodePtr->value == nodeValue)
+        T val = nodePtr->value;
+        if(val->operator==(nodeValue))
+        {
+            // Item found can proceed to delete
+            ListNode<T> *delNode = nodePtr;
+            ListNode<T> *prevNode = nodePtr->prev;
+            if(delNode == tail)
+            {
+                tail = delNode->prev;
+                
+            }
+            if(nodePtr->next != 0)
+                nodePtr->next->prev = prevNode;
+            prevNode->next = nodePtr->next;
+            
+            
+            delete delNode;
+            count--;
+            return true;
+            
+        }
+        // Save a pointer to the next node.
+        nodePtr = nodePtr->next;
+        
+    }
+    return false;
+    
 }
 #endif

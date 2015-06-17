@@ -17,7 +17,7 @@ class HashedDictionary
 {
 private:
 
-    LinkedList<BinaryNode<ItemType>*> **hashTable;
+    LinkedList<Entry<KeyType,ItemType>*> **hashTable;
 
     int tableSize;
     int bucketSize;
@@ -36,41 +36,79 @@ public:
 
     // accessor for ItemCount
     int getItemCount() const {return itemCount;}
+    
+    HashedDictionary<KeyType,ItemType>* reHash(const HashedDictionary<KeyType,ItemType>*,int newSize,int newBucketSize);
 
 	ItemType * getItem(const KeyType &searchKey) const;
 
     double getAverageNumofNodes();
+
     int getColissions();
     int getColissionsAtIndex(int index);
+
     int getNumOfEmptyBuckets();
+
     int getNumOfFullBuckets();
+
+    void displayHashTableList(void visit(KeyType &k,ItemType &item)) const;
+
+    void printHashTable(void visit(KeyType & k,int spaces,int index,ItemType &item)) const;
+
+    double getLoadFactor();
+
+    int getHashIndex(const KeyType& searchKey) const;
+    bool add(const KeyType& searchKey, const ItemType& newItem);
+    
     int getBucketSize(){return bucketSize;}
     int getTableSize(){ return tableSize;}
-    void displayHashTableList(void visit(KeyType &k));
-    void printHashTable(void visit(KeyType & k,int spaces,int index));
-    double getLoadFactor();
-    int getHashIndex(const KeyType& searchKey) const;
-    bool add(const KeyType& searchKey, BinaryNode<ItemType>* newItem);
+    
+    LinkedList<Entry<KeyType,ItemType>*> ** getHashTable() const {return hashTable;}
+
+	bool remove(const KeyType &target, ItemType& removeItem);
+    
+    
+    
+     
 };
 
 // getHashIndex: hash function for the unique key, uses first 6 chars of string and sums the numerical equivalents of each character and
 // uses modulo division with table size to produce index
-template <class KeyType,class ItemType>
+/*template <class KeyType,class ItemType>
 int HashedDictionary<KeyType,ItemType>::getHashIndex(const KeyType& searchKey) const
 {
     int sum=0;
-    int zeroes = 0;
-    int ones = 0;
     for (int i = 0; i < searchKey.length() ;i++)
     {
-        if(searchKey[i]=='0') zeroes++;
-        if(searchKey[i]=='1') ones++;
-        sum += (searchKey[i]*searchKey[i]*searchKey[i])*i;
+        sum += searchKey[i];
     }
-    sum *= zeroes; //480 to 371 collisions
-    sum *= ones; //371 to 227 collisions
     sum = sum % tableSize;
     return sum;
+}
+*/
+
+// getHashIndex: hash function for the unique key, uses first 6 chars of string and sums the numerical equivalents of each character and
+// uses modulo division with table size to produce index
+
+template <class KeyType, class ItemType>
+int HashedDictionary<KeyType, ItemType>::getHashIndex(const KeyType& searchKey) const
+{
+	int sum = 0;
+	int zeroes = 0;
+	int ones = 0;
+	for (int i = 0; i < searchKey.length(); i++)
+	{
+		if (searchKey[i] == '0') zeroes++;
+		if (searchKey[i] == '1') ones++;
+		//sum += (searchKey[i] * searchKey[i] * searchKey[i])*i;
+		 sum += (searchKey[i] * searchKey[i] * searchKey[i]);
+	}
+    if(zeroes != 0)
+	sum *= zeroes; //480 to 371 collisions
+	if (ones != 0)
+	sum *= ones; //371 to 227 collisions
+	sum = sum % tableSize;
+    //cout<<"HashIndex is "<<sum<<" "<<searchKey<<endl;
+	return sum;
 }
 
 // getLoadFactor: calculates load factor of hash table
@@ -85,19 +123,27 @@ double HashedDictionary<KeyType,ItemType>::getLoadFactor()
     return loadFactor;
 }
 
+
+
 //printHashTable: prints hash table with indenting
 template <class KeyType,class ItemType>
-void HashedDictionary<KeyType,ItemType>::printHashTable(void visit(KeyType & k,int spaces,int index))
+void HashedDictionary<KeyType,ItemType>::printHashTable(void visit(KeyType & k,int spaces,int index,ItemType& item)) const
 {
 
     for(int i=0;i<tableSize;i++)
     {
         int s = 0;
         KeyType key;
+        ItemType item;
         if(hashTable[i] != 0)
+        {
             key = hashTable[i]->getHead()->next->value->getKey();
+            item = hashTable[i]->getHead()->next->value->getItem();
+            //visit(key,s,i,item);
+            
+        }
 
-        visit(key,s,i);
+        visit(key,s,i,item);
         if(hashTable[i] != 0)
         {
             ListNode<Entry<KeyType,ItemType>*> *ptr = hashTable[i]->getHead()->next;
@@ -110,7 +156,7 @@ void HashedDictionary<KeyType,ItemType>::printHashTable(void visit(KeyType & k,i
                 ItemType item = entry->getItem();
                 KeyType k1;
                 k1 = entry->getKey();
-                visit(k1,key.length(),-1);
+                visit(k1,key.length(),-1,item);
                 ptr = ptr->next;
             }
 
@@ -121,17 +167,25 @@ void HashedDictionary<KeyType,ItemType>::printHashTable(void visit(KeyType & k,i
 
 //displayHashTableList: displays the items in hash table in a list
 template <class KeyType,class ItemType>
-void HashedDictionary<KeyType,ItemType>::displayHashTableList(void visit(KeyType &k))
+void HashedDictionary<KeyType,ItemType>::displayHashTableList(void visit(KeyType &k,ItemType& item)) const
 {
-    for(int i = 0; i < tableSize;i++){
-        if(hashTable[i] != 0){
-            ListNode<BinaryNode<ItemType>*> *ptr = hashTable[i]->getHead();
+    for(int i=0;i<tableSize;i++)
+    {
+        if(hashTable[i] != 0)
+        {
+            ListNode<Entry<KeyType,ItemType>*> *ptr = hashTable[i]->getHead();
             ptr = ptr->next;
-            while(ptr!=0){
-                BinaryNode<ItemType>* entry = ptr->value;
-                cout << entry->getItem();
+            while(ptr != 0)
+            {
+                Entry<KeyType,ItemType>* entry = ptr->value;
+
+                ItemType item = entry->getItem();
+                KeyType k;
+                k = entry->getKey();
+                visit(k,item);
                 ptr = ptr->next;
             }
+
         }
     }
 }
@@ -144,7 +198,7 @@ int HashedDictionary<KeyType,ItemType>::getNumOfFullBuckets()
     int full = 0;
     for(int i=0;i<tableSize;i++)
     {
-        if(hashTable[i] != 0 && hashTable[i]->getCount() >= 3)
+        if(hashTable[i] != 0 && hashTable[i]->getCount() >= bucketSize)
         {
             full++;
         }
@@ -213,15 +267,18 @@ double HashedDictionary<KeyType,ItemType>::getAverageNumofNodes()
 
 // add: adds the item and key to hash table
 template <class KeyType,class ItemType>
-bool HashedDictionary<KeyType,ItemType>::add(const KeyType& searchKey, BinaryNode<ItemType>* newItem)
+bool HashedDictionary<KeyType,ItemType>::add(const KeyType& searchKey, const ItemType& newItem)
 {
+
     int hashIndex = getHashIndex(searchKey);
 
     if(hashTable[hashIndex] == 0)
     {
-        //hashTable[hashIndex] = new LinkedList<Entry<KeyType,ItemType>*>();
-        hashTable[hashIndex] = new LinkedList<BinaryNode<ItemType>*>;
-        hashTable[hashIndex]->insertNode(newItem);
+        Entry<KeyType, ItemType> * entryToAddPtr = new Entry<KeyType, ItemType>(searchKey,newItem);
+        hashTable[hashIndex] = new LinkedList<Entry<KeyType,ItemType>*>();
+
+
+        hashTable[hashIndex]->insertNode(entryToAddPtr);
         itemCount++;
     }
     else
@@ -230,7 +287,8 @@ bool HashedDictionary<KeyType,ItemType>::add(const KeyType& searchKey, BinaryNod
         {
             return false;
         }
-        hashTable[hashIndex]->insertNode(newItem);
+        Entry<KeyType, ItemType> * entryToAddPtr = new Entry<KeyType, ItemType>(searchKey,newItem);
+        hashTable[hashIndex]->insertNode(entryToAddPtr);
         itemCount++;
     }
 
@@ -244,12 +302,13 @@ HashedDictionary<KeyType, ItemType>::HashedDictionary(int tablesize,int bucketsi
 
 	tableSize = tablesize;
 
-	hashTable = new LinkedList<BinaryNode<ItemType>*> *[tableSize];
+	hashTable = new LinkedList<Entry<KeyType, ItemType>*> *[tableSize];
 	for (int i = 0; i<tableSize; i++)
 	{
 		hashTable[i] = 0;
 	}
 	bucketSize = bucketsize;
+    itemCount=0;
 
 }
 
@@ -257,26 +316,33 @@ HashedDictionary<KeyType, ItemType>::HashedDictionary(int tablesize,int bucketsi
 template <class KeyType, class ItemType>
 ItemType * HashedDictionary<KeyType, ItemType>::getItem(const KeyType &searchKey) const
 {
-	int hashCode = getHashIndex(searchKey);
-	ItemType *found = 0;
-	ListNode<Entry<KeyType, ItemType>*> *ptr = hashTable[hashCode]->getHead();
-	ptr = ptr->next;
-	bool success = false;
-	while (ptr && !success)
-	{
-		Entry<KeyType, ItemType>* entry = ptr->value;
-		ptr = ptr->next;
-		ItemType item;
-		item = entry->getItem();
-		//item.print();
-		if (entry->getKey() == searchKey)
-		{
-			found = new ItemType(entry->getItem());
-			success = true;
-		}
-	}
-
-	return found;
+    int hashCode = getHashIndex(searchKey);
+    ItemType *found = 0;
+    if(hashTable[hashCode] != 0)
+    {
+        ListNode<Entry<KeyType, ItemType>*> *ptr = hashTable[hashCode]->getHead();
+        
+        
+        
+        ptr = ptr->next;
+        bool success = false;
+        while (ptr && !success)
+        {
+            Entry<KeyType, ItemType>* entry = ptr->value;
+            ptr = ptr->next;
+            ItemType item;
+            item = entry->getItem();
+            //item.print();
+            if (entry->getKey() == searchKey)
+            {
+                found = new ItemType(entry->getItem());
+                success = true;
+            }
+        }
+        
+    }
+    
+    return found;
 
 }
 
@@ -291,6 +357,76 @@ void HashedDictionary<KeyType, ItemType>::deleteDictionary()
 	}
 	delete[] hashTable;
 
+}
+
+template <class KeyType,class ItemType>
+HashedDictionary<KeyType,ItemType>* HashedDictionary<KeyType,ItemType>::reHash(const HashedDictionary<KeyType,ItemType>* oldHashTable,int newSize,int newBucketSize)
+{
+    HashedDictionary<KeyType,ItemType> *newTable = new HashedDictionary<KeyType,ItemType>(newSize,newBucketSize);
+    
+    LinkedList<Entry<KeyType,ItemType>*> **oldTable = oldHashTable->getHashTable();
+    
+    
+    for(int i=0;i<oldHashTable->tableSize;i++)
+    {
+        if(oldTable[i] != NULL)
+        {
+            ListNode<Entry<KeyType,ItemType>*> *ptr = oldTable[i]->getHead()->next;
+            
+            //ptr = ptr->next;
+            while(ptr != 0)
+            {
+                Entry<KeyType,ItemType>* entry = ptr->value;
+                ItemType item = entry->getItem();
+                KeyType k1;
+                k1 = entry->getKey();
+                newTable->add(k1,item);
+                ptr = ptr->next;
+            }
+            
+        }
+        
+    }
+    
+    return newTable;
+}
+
+
+template <class KeyType, class ItemType>
+bool HashedDictionary<KeyType, ItemType>::remove(const KeyType &target, ItemType& removeItem)
+{
+
+	int hashIndex = getHashIndex(target);
+	if (hashTable[hashIndex] != 0)
+	{
+		ItemType *found = 0;
+		LinkedList<Entry<KeyType, ItemType>*> *ptr = hashTable[hashIndex];
+		Entry<KeyType, ItemType> *entry = new Entry<KeyType, ItemType>;
+		entry->setKey(target);
+		entry->setItem(removeItem);
+
+		bool success = ptr->deleteNode(entry);
+		if (success) {
+			itemCount--;
+			if (ptr->getCount() == 0)
+			{
+				delete ptr;
+				hashTable[hashIndex] = 0;
+			}
+			return true;
+		}
+
+
+
+	}
+	else
+	{
+		// HashTable empty at the index
+		return false;
+
+	}
+
+	return false;
 }
 
 
