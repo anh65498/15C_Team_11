@@ -37,6 +37,7 @@ public:
 
 };
 
+// determine how many objects are in a file based on number of lines
 int CourseDB::getFileLines(string file){
     int lines = 0;
     ifstream infile(file.c_str());
@@ -51,6 +52,7 @@ int CourseDB::getFileLines(string file){
     return lines;
 }
 
+// check if an integer is a prime number
 bool IsPrime(int number){
     if (number == 2 || number == 3)
         return true;
@@ -69,6 +71,7 @@ bool IsPrime(int number){
     return true;
 }
 
+// finds the closest prime number greater than a given integer
 int CourseDB::closestPrime(int a){
     while (!IsPrime(++a)){ }
     return a;
@@ -188,8 +191,7 @@ CourseDB::CourseDB(string fileName, int buckets)
         }
 
     }
-
-
+    cout<<"Ready!"<<endl;
     infile.close();
 }
 

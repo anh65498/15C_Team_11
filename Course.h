@@ -44,7 +44,7 @@ public:
         cout << courseid << " " << title << " " << instructor << " " << location << endl;
     }
 
-    // accessors
+    // mutators: sets new values for the object's attributes
 
     void setCourseid(const string input) { courseid = input; }
     void setTitle(const string input) { title = input; }
@@ -57,7 +57,7 @@ public:
     void setKey(const string input) { key = input; }
 
 
-    // mutators
+    // accessors: returns specific object attributes
 
     string getCourseid() const{ return courseid; }
     string getTitle() const{ return title; }
@@ -115,6 +115,7 @@ public:
             return false;
     }
 
+    // overloads << operator
     friend ostream & operator<<(ostream &o, const Course& c)
     {
         o << c.courseid << ";" << c.classkey << ";" << c.title << ";" << c.instructor << ";" << c.days << ";" << c.start_time << ";" << c.end_time << ";" << c.location<< endl;

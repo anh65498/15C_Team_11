@@ -61,11 +61,13 @@ void displayCourseWithLevel(Course & anItem, int level)
     cout << endl;
 }
 
-// displayKey:
+// displayKey: Displays a course and an ID
 void displayKey(string &s,Course &c)
 {
     cout<<s<<" "<<c.getTitle()<<endl;
 }
+
+// displayItems: Displays an item from a hash table with an indent if it is a collision
 void displayItems(string &s,int spaces,int index,Course& c)
 {
 
@@ -94,12 +96,13 @@ void displayItems(string &s,int spaces,int index,Course& c)
 
 }
 
-
+// printCourseToFile: Adds an item to an output
 void printCourseToFile(Course & anItem, int level,ostream os)
 {
     os << anItem;
 }
 
+// showOptions: Display the main menu, perhaps the developer menu as well if toggled
 void showOptions(bool developerMode){
     showTime();
     cout << endl << "* Course Database - Main Menu *" << endl;
@@ -129,7 +132,8 @@ void showOptions(bool developerMode){
     cout << "\tQ - Quit" << endl;
 }
 
-void HASHstatistics( HashedDictionary<string,Course> *hashTable){
+// HashStatistics: Displays statistical information about the hash table used
+void HashStatistics( HashedDictionary<string,Course> *hashTable){
     int c = hashTable->getColissions();
     int full = hashTable->getNumOfFullBuckets();
     int empty = hashTable->getNumOfEmptyBuckets();
@@ -146,6 +150,7 @@ void HASHstatistics( HashedDictionary<string,Course> *hashTable){
     cout<<"\tOverflow: " << hashTable->getOverflow()<<endl;
 }
 
+// BSTprintFile: Saves database to an output file
 void BSTprintFile(const BinarySearchTree<Course> * courseTree){
     cout << "Printing courses to courseout.txt" << endl;
     ofstream outfile;
@@ -153,6 +158,7 @@ void BSTprintFile(const BinarySearchTree<Course> * courseTree){
     courseTree->printToFile(outfile);
 }
 
+// BSTdeleteCourse: Delete a course from the database
 void BSTdeleteCourse(BinarySearchTree<Course> * courseTree, BinarySearchTree<Course> * secCourseTree, HashedDictionary <string, Course> * hashTable)
 {
     cout<<"* Course Database - Delete Course *"<<endl<<endl;
@@ -204,7 +210,8 @@ void BSTdeleteCourse(BinarySearchTree<Course> * courseTree, BinarySearchTree<Cou
 
 }
 
-void BSTAddCourse( BinarySearchTree<Course> * courseTree, BinarySearchTree<Course> * secCourseTree, HashedDictionary <string, Course> * hashTable)
+// BSTaddCourse: Add a course to the database
+void BSTaddCourse( BinarySearchTree<Course> * courseTree, BinarySearchTree<Course> * secCourseTree, HashedDictionary <string, Course> * hashTable)
 {
     cout<<"* Course Database - Add Course *"<<endl<<endl;
     string courseid;
@@ -219,6 +226,15 @@ void BSTAddCourse( BinarySearchTree<Course> * courseTree, BinarySearchTree<Cours
     cout<<"Enter course ID(ex:00019): ";
     cin.ignore();
     getline(cin, courseid);
+    Course c;
+    c.setKey(courseid);
+
+    Course found;
+    if(courseTree->getEntry(c,found))   // immediately check if course ID is already being used
+    {
+        cout<<"Course with this ID already exists."<<endl;
+        return;     // end function if a match was found
+    }
 
     cout<<"Enter class key(ex:ANTH001.02): ";
     getline(cin, classkey);
@@ -242,8 +258,6 @@ void BSTAddCourse( BinarySearchTree<Course> * courseTree, BinarySearchTree<Cours
     getline(cin, location);
     cout << endl;
 
-
-    Course c;
     c.setCourseid(courseid);
     c.setInstructor(instructor);
     c.setClassKey(classkey);
@@ -252,30 +266,20 @@ void BSTAddCourse( BinarySearchTree<Course> * courseTree, BinarySearchTree<Cours
     c.setDays(days);
     c.setStartTime(start_time);
     c.setEndTime(end_time);
-    c.setKey(courseid);
     cout<<"Adding course...\n";
 
-    Course found;
-    if(courseTree->getEntry(c,found))
-    {
-        cout<<"Course with this ID already exists, failed to add course."<<endl;
+    courseTree->insert(c);
+    bool success = hashTable->add(courseid,c);
+    if (!success){
+            cout<<"Error adding new course! Please try again later."<<endl;
+            return;
     }
-    else
-    {
-        courseTree->insert(c);
-        bool success = hashTable->add(courseid,c);
-        if (!success){
-                cout<<"Error adding new course! Please try again later."<<endl;
-                return;
-        }
-        c.setKey(title);
-        secCourseTree->insert(c);
-        cout<<"Course added to BSTs and Hash Table."<<endl;
-    }
-
-
+    c.setKey(title);
+    secCourseTree->insert(c);
+    cout<<"Course added to BSTs and Hash Table."<<endl;
 }
 
+// BSTprintSortedList: Print database sorted by course ID numerically or course title alphabetically
 void BSTprintSortedList(const BinarySearchTree<Course> * courseTree,const BinarySearchTree<Course> * secCourseTree)
 {
     cout<<"* Course Database - Sort List *"<<endl<<endl;
@@ -301,6 +305,7 @@ void BSTprintSortedList(const BinarySearchTree<Course> * courseTree,const Binary
         secCourseTree->inOrder(displayCourse);
 }
 
+// BSTsearch: Search database for a course
 void BSTsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTree<Course> * secCourseTree){
     char searchoption;
     string courseid;
@@ -406,43 +411,49 @@ void BSTsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTre
     }
 }
 
+// BSTindentedPrint: Displays database with indentations to represent tree branches and levels
 void BSTindentedPrint(const BinarySearchTree<Course> * courseTree){
     cout << endl;
     courseTree->print(displayCourseWithLevel);
     cout << endl;
 }
 
+// BSTbreadth: Displays database in breadth order
 void BSTbreadth(const BinarySearchTree<Course> * courseTree)
 {
 	cout << "- Breadth -" << endl;
 	courseTree->levelOrder(displayCourse);
 }
 
+// BSTpreOrder: Displays database pre-order
 void BSTpreOrder(const BinarySearchTree<Course> * courseTree)
 {
 	cout << "- Preorder -" << endl;
 	courseTree->preOrder(displayCourse);
 }
 
+//BSTinOrder: Displays database in-order
 void BSTinOrder(const BinarySearchTree<Course> * courseTree)
 {
 	cout << "- Inorder -" << endl;
 	courseTree->inOrder(displayCourse);
 }
 
+// BSTpostOrder: Displays database post-order
 void BSTpostOrder(const BinarySearchTree<Course> * courseTree)
 {
 	cout << "- Postorder -" << endl;
 	courseTree->postOrder(displayCourse);
 }
 
+// HashPrint: Displays hash table, either items only or with empty buckets visible
 void HashPrint(const HashedDictionary<string, Course> *hashTable)
 {
     char input;
     cout<<"* Course Database - Hash Table Print *"<<endl<<endl;
     cout<<"Print table by..."<<endl;
-    cout<<"\tF - Full Table"<<endl;
-    cout<<"\tI - Items"<<endl;
+    cout<<"\tF - Full Table (with empty buckets)"<<endl;
+    cout<<"\tI - Items Only"<<endl;
 
     cout << endl << "Select an option (or 'Q' to return to menu): ";
     cin>>input;
@@ -469,6 +480,7 @@ void HashPrint(const HashedDictionary<string, Course> *hashTable)
 
 }
 
+// USERsearch: Special user search to provide a more user-friendly access
 void USERsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTree<Course> * secCourseTree,char key)
 {
     char searchoption = key;
@@ -547,6 +559,7 @@ void USERsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTr
     }
 }
 
+// HashSearch: Searches for a matching course ID in the hash table
 void HashSearch(const HashedDictionary<string, Course> *hashTable)
 {
     cout<<"* Course Database - Hash Search *"<<endl;
@@ -576,6 +589,13 @@ void HashSearch(const HashedDictionary<string, Course> *hashTable)
         }
 
     } while (!done);
+}
+
+// displayCredits: Prints the names of the developers of this program
+void displayCredits()
+{
+    cout << "Program developed by:" << endl;
+    cout << "\tThomas Shepherd\n\tRohan Uppuluri\n\tBrandon Nguyen\n\tFranky Dong\n";
 }
 
 // showMenu: Prints the selection of choices for the user
@@ -613,29 +633,31 @@ void showMenu(CourseDB db)
             case 'I':BSTindentedPrint(db.getTree());break;
             case 'B':BSTsearch(db.getTree(),db.getSecTree());break;
             case 'F':BSTprintFile(db.getTree());break;
-            case 'A':BSTAddCourse(db.getTree(),db.getSecTree(), db.getHash());break;
+            case 'A':BSTaddCourse(db.getTree(),db.getSecTree(), db.getHash());break;
             case 'D':BSTdeleteCourse(db.getTree(), db.getSecTree(), db.getHash());break;
 
-            //case 'P': db.getHash()->displayHashTableList(displayKey);
-            case 'S':HASHstatistics(db.getHash());break;
-                //case 'B':BSTbreadthFirst(db.getTree());break;
+            case 'S':HashStatistics(db.getHash());break;
             case 'T':HashPrint(db.getHash());break;
             case 'U':HashSearch(db.getHash());break;
 
             case 'H':showOptions(developerMode);break;
             case 'Q':done = true;BSTprintFile(db.getTree());break;
 
+            case 'W':displayCredits();break;
+
             default:cout << "Invalid input. Enter 'H' to see the menu again." << endl;cin.clear();break;
         }
 
     } while (!done);
 }
+
 int main()
 {
     CourseDB db("courses.txt",BUCKETSIZE);
     // sample usage of rehashing
 
-   // db.rehashHashTable(db.getHash(),301, 1000);
+    // db.rehashHashTable(db.getHash(),301, 1000);
+
     showMenu(db);
 
     return 0;
