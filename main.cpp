@@ -40,16 +40,16 @@ void display(string & anItem)
     cout << "Displaying item - " << anItem << endl;
 }
 
-// displayStudent: displays the student IDs
+// displayCourse: displays course ID and title
 void displayCourse(Course & anItem)
 {
     cout << setprecision(1) << fixed << anItem.getCourseid() << " "<<anItem.getTitle()<<endl;
 }
 
-// displayStudentWithLevel: displays the student IDs with the correct spacing and level number for print function
+// displayCourseWithLevel: displays course ID and title with indentation based on tree level
 void displayCourseWithLevel(Course & anItem, int level)
 {
-    int maxwidth = 3; // width = level number + . + studentID = 7  ex: 1. 1900 = 7 chars
+    int maxwidth = 3; // width = level number + . + courseID = 7  ex: 1. 11707 = 8 chars
     for (int i = 0; i < level; i++)
     {
         for (int j = 0; j < maxwidth; j++)
@@ -61,6 +61,7 @@ void displayCourseWithLevel(Course & anItem, int level)
     cout << endl;
 }
 
+// displayKey:
 void displayKey(string &s,Course &c)
 {
     cout<<s<<" "<<c.getTitle()<<endl;
@@ -102,26 +103,26 @@ void printCourseToFile(Course & anItem, int level,ostream os)
 void showOptions(bool developerMode){
     showTime();
     cout << endl << "* Course Database - Main Menu *" << endl;
-    cout << "\n\tY - Search by Course ID" << endl;
-    cout << "\tV - Search by Title" << endl;
-    cout << "\tZ - Developer Mode";
+    cout << "\n\tX - Search by Course ID" << endl;
+    cout << "\tY - Search by Title" << endl;
+    cout << "\tZ - Developer Menu";
     if(developerMode){
         cout << " (ON)" << endl << endl;
         cout << "Binary Search Tree" << endl;
-        cout << "\tB - Print Sorted List " << endl;
-		cout << "\tL - Breadth Traversal " << endl;
-		cout << "\tM - Preorder Traversal " << endl;
-		cout << "\tN - Inorder Traversal" << endl;
-		cout << "\tO - Postorder Traversal" << endl;
-        cout << "\tT - Print Tree as Indented List " << endl;
-        cout << "\tS - BST Search " << endl;
+        cout << "\tL - Print Sorted List " << endl;
+		cout << "\tM - Breadth Traversal " << endl;
+		cout << "\tN - Preorder Traversal " << endl;
+		cout << "\tO - Inorder Traversal" << endl;
+		cout << "\tP - Postorder Traversal" << endl;
+        cout << "\tI - Print Tree as Indented List " << endl;
+        cout << "\tB - BST Search " << endl;
         cout << "\tF - Print to File " << endl;
         cout << "\tA - Add Course " << endl;
-        cout << "\tX - Delete Course " << endl;
+        cout << "\tD - Delete Course " << endl;
         cout << "Hash Table" << endl;
-        cout << "\tC - Display Collisions" << endl;
-        cout << "\tP - Print Hash table" << endl;
-        cout << "\tD - Hash table Search" << endl;
+        cout << "\tS - Display Statistics" << endl;
+        cout << "\tT - Print Hash Table" << endl;
+        cout << "\tU - Hash Table Search" << endl;
     }
     else cout << " (OFF)" << endl;
     cout << endl << "\tH - Help" << endl;
@@ -133,7 +134,7 @@ void HASHstatistics( HashedDictionary<string,Course> *hashTable){
     int full = hashTable->getNumOfFullBuckets();
     int empty = hashTable->getNumOfEmptyBuckets();
 
-    cout<<endl<<"\tStatistics:"<<endl;
+    cout<<"* Course Database - Statistics *"<<endl<<endl;
     cout<<"\tNumber of items:"<<hashTable->getItemCount()<<endl;
     cout<<"\tNumber of buckets:"<<hashTable->getBucketSize()<<endl;
     cout<<"\tSize of table:"<<hashTable->getTableSize()<<endl;
@@ -143,7 +144,6 @@ void HASHstatistics( HashedDictionary<string,Course> *hashTable){
     cout<<"\tNumber of Empty Buckets:  "<<empty<<endl;
     cout<<"\tAverage Number of nodes stored per bucket: "<<hashTable->getAverageNumofNodes()<<endl;
     cout<<"\tOverflow: " << hashTable->getOverflow()<<endl;
-    cout << endl;
 }
 
 void BSTprintFile(const BinarySearchTree<Course> * courseTree){
@@ -155,6 +155,7 @@ void BSTprintFile(const BinarySearchTree<Course> * courseTree){
 
 void BSTdeleteCourse(BinarySearchTree<Course> * courseTree, BinarySearchTree<Course> * secCourseTree, HashedDictionary <string, Course> * hashTable)
 {
+    cout<<"* Course Database - Delete Course *"<<endl<<endl;
     cout<<"Enter Course ID to delete :";
     string courseid;
     cin>>courseid;
@@ -205,6 +206,7 @@ void BSTdeleteCourse(BinarySearchTree<Course> * courseTree, BinarySearchTree<Cou
 
 void BSTAddCourse( BinarySearchTree<Course> * courseTree, BinarySearchTree<Course> * secCourseTree, HashedDictionary <string, Course> * hashTable)
 {
+    cout<<"* Course Database - Add Course *"<<endl<<endl;
     string courseid;
     string classkey;
     string title;
@@ -214,103 +216,114 @@ void BSTAddCourse( BinarySearchTree<Course> * courseTree, BinarySearchTree<Cours
     string end_time;
     string location;
 
-    bool done = false;
+    cout<<"Enter course ID(ex:00019): ";
+    cin.ignore();
+    getline(cin, courseid);
 
-    do {
+    cout<<"Enter class key(ex:ANTH001.02): ";
+    getline(cin, classkey);
 
-        cout<<"Enter course ID(ex:00019): ";
-        cin.ignore();
-        getline(cin, courseid);
+    cout<<"Enter title(ex:WOMEN IN LITERATURE): ";
+    getline(cin, title);
 
-        cout<<"Enter class key(ex:ANTH001.02): ";
-        getline(cin, classkey);
+    cout<<"Enter instructor(ex:Andrade, Claudia): ";
+    getline(cin, instructor);
 
-        cout<<"Enter title(ex:WOMEN IN LITERATURE): ";
-        getline(cin, title);
+    cout<<"Enter days(ex:MTWRF): ";
+    getline(cin, days);
 
-        cout<<"Enter instructor(ex:Andrade, Claudia): ";
-        getline(cin, instructor);
+    cout<<"Enter Start Time(ex:1000): ";
+    getline(cin, start_time);
 
-        cout<<"Enter days(ex:MTWRF): ";
-        getline(cin, days);
+    cout<<"Enter End Time(ex:1225): ";
+    getline(cin, end_time);
 
-        cout<<"Enter Start Time(ex:1000): ";
-        getline(cin, start_time);
-
-        cout<<"Enter End Time(ex:1225): ";
-        getline(cin, end_time);
-
-        cout<<"Enter location(ex:MLC102): ";
-        getline(cin, location);
-        cout << endl;
+    cout<<"Enter location(ex:MLC102): ";
+    getline(cin, location);
+    cout << endl;
 
 
-        Course c;
-        c.setCourseid(courseid);
-        c.setInstructor(instructor);
-        c.setClassKey(classkey);
-        c.setTitle(title);
-        c.setLocation(location);
-        c.setDays(days);
-        c.setStartTime(start_time);
-        c.setEndTime(end_time);
-        c.setKey(courseid);
-        cout<<"Adding course...\n";
+    Course c;
+    c.setCourseid(courseid);
+    c.setInstructor(instructor);
+    c.setClassKey(classkey);
+    c.setTitle(title);
+    c.setLocation(location);
+    c.setDays(days);
+    c.setStartTime(start_time);
+    c.setEndTime(end_time);
+    c.setKey(courseid);
+    cout<<"Adding course...\n";
 
-        Course found;
-        if(courseTree->getEntry(c,found))
-        {
-            cout<<"Course with this ID already exists, failed to add course."<<endl;
-			done = true;
+    Course found;
+    if(courseTree->getEntry(c,found))
+    {
+        cout<<"Course with this ID already exists, failed to add course."<<endl;
+    }
+    else
+    {
+        courseTree->insert(c);
+        bool success = hashTable->add(courseid,c);
+        if (!success){
+                cout<<"Error adding new course! Please try again later."<<endl;
+                return;
         }
-        else
-        {
-            cout<<"Course added to BSTs and Hash Table."<<endl;
-            courseTree->insert(c);
-            bool success = hashTable->add(courseid,c);
-            c.setKey(title);
-            secCourseTree->insert(c);
-            done = true;
-        }
-    }while(!done);
+        c.setKey(title);
+        secCourseTree->insert(c);
+        cout<<"Course added to BSTs and Hash Table."<<endl;
+    }
 
 
 }
 
 void BSTprintSortedList(const BinarySearchTree<Course> * courseTree,const BinarySearchTree<Course> * secCourseTree)
 {
-    cout<<"* Course Database - Sort List *"<<endl;
+    cout<<"* Course Database - Sort List *"<<endl<<endl;
     cout<<"Sort list by..." << endl;
-    cout<<"\tC - Course ID"<<endl;
-    cout<<"\tT - Title"<<endl;
+    cout<<"\tX - Course ID"<<endl;
+    cout<<"\tY - Title"<<endl;
+    cout << endl << "Select an option: ";
     char input;
     cin>>input;
-    cout << endl;
+    while (!cin || (tolower(input)!='x' && tolower(input)!='y' && tolower(input)!='q'))
+    {
+        cin.clear();
+        cin.ignore();
+        cout << "Invalid input. Please try again: ";
+        cin >> input;
+    }
+    if(tolower(input)=='q') return;
 
-    if(tolower(input) == 'c')
+    cout << endl;
+    if(tolower(input) == 'x')
         courseTree->inOrder(displayCourse);
-    if(tolower(input) == 't')
+    else if(tolower(input) == 'y')
         secCourseTree->inOrder(displayCourse);
-    cout << endl;
-
 }
 
 void BSTsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTree<Course> * secCourseTree){
     char searchoption;
     string courseid;
-    cout<<"* Course Database - Search *"<<endl;
+    cout<<"* Course Database - BST Search *"<<endl<<endl;
     cout<<"Search by..." << endl;
-    cout<<"\tP - Course ID (BST)"<<endl;
-    cout<<"\tS - Title (BST)"<<endl;
+    cout<<"\tX - Course ID (BST)"<<endl;
+    cout<<"\tY - Title (BST)"<<endl;
     //cout<<"H - HashTable "<<endl;
+    cout << endl << "Select an option: ";
     cin.ignore();
 
     cin>>searchoption;
-    cout << endl;
+    while (!cin || (toupper(searchoption)!='X' && toupper(searchoption)!='Y' && toupper(searchoption)!='Q'))
+    {
+        cin.clear();
+        cin.ignore();
+        cout << "Invalid input. Please try again: ";
+        cin >> searchoption;
+    }
 
     switch(toupper(searchoption))
     {
-        case 'P':
+        case 'X':
         {
             bool done = false;
             do {
@@ -320,7 +333,6 @@ void BSTsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTre
                 if (courseid == "Q" || courseid == "q")
                     done = true;
                 else {
-
                     Course search(courseid);
                     search.setKey(courseid);
                     Course found;
@@ -329,28 +341,23 @@ void BSTsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTre
                     if (success)
                     {
                         cout << endl << "Course ID found: "  << "ID: " << found.getCourseid() << endl << "Title: " << found.getTitle() << endl;
-                        done = true;
                     }
 
                     else
                         cout << endl << "Invalid ID, try again." << endl;
-
-
                 }
 
             } while (!done);
 
             break;
         }
-        case 'S':
+        case 'Y':
         {
             string title;
             bool done = false;
             cin.clear();
             cin.ignore();
             do {
-
-
                 cout << endl << "Enter Course Title (or 'Q' to return to menu): ";
 
                 getline(cin,title);
@@ -362,6 +369,7 @@ void BSTsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTre
 
                 else
                 {
+                    cout<<endl;
                     Course search;
                     search.setTitle(title);
                     search.setKey(title);
@@ -389,21 +397,13 @@ void BSTsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTre
                         Course c = nodePtr->value;
                         cout<<c;
                         nodePtr = nodePtr->next;
-
-
-
                     }
-
                 }
-
-
-
             } while (!done);
+
             break;
         }
     }
-
-
 }
 
 void BSTindentedPrint(const BinarySearchTree<Course> * courseTree){
@@ -439,32 +439,45 @@ void BSTpostOrder(const BinarySearchTree<Course> * courseTree)
 void HashPrint(const HashedDictionary<string, Course> *hashTable)
 {
     char input;
-    cout<<"* Course Database - Hash Table Print *"<<endl;
+    cout<<"* Course Database - Hash Table Print *"<<endl<<endl;
     cout<<"Print table by..."<<endl;
     cout<<"\tF - Full Table"<<endl;
     cout<<"\tI - Items"<<endl;
-    cin>>input;
-    cout << endl;
 
-    input = tolower(input);
-    if(input == 'f')
+    cout << endl << "Select an option: ";
+    cin>>input;
+
+    while (!cin || (tolower(input)!='f' && tolower(input)!='i' && tolower(input)!='q'))
+    {
+        cin.clear();
+        cin.ignore();
+        cout << "Invalid input. Please try again: ";
+        cin >> input;
+    }
+    if (tolower(input) == 'q') return;
+
+    cout << endl;
+    if(tolower(input) == 'f')
     {
         hashTable->printHashTable(displayItems);
     }
-    else if (input == 'i')
+    else if (tolower(input) == 'i')
     {
         hashTable->displayHashTableList(displayKey);
     }
 
+
 }
 
-void USERsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTree<Course> * secCourseTree,char key){
+void USERsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTree<Course> * secCourseTree,char key)
+{
     char searchoption = key;
     string courseid;
     switch(toupper(searchoption))
     {
-        case 'Y':
+        case 'X':
         {
+            cout<<"* Course Database - ID Search *"<<endl;
             bool done = false;
             do {
                 cout << endl << "Enter Course ID (or 'Q' to return to menu): ";
@@ -479,7 +492,6 @@ void USERsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTr
                     if (success)
                     {
                         cout << endl << "Course ID found: "  << "ID: " << found.getCourseid() << endl << "Title: " << found.getTitle() << endl;
-                        done = true;
                     }
                     else
                         cout << endl << "Invalid ID, try again." << endl;
@@ -489,8 +501,9 @@ void USERsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTr
 
             break;
         }
-        case 'V':
+        case 'Y':
         {
+            cout<<"* Course Database - Title Search *"<<endl;
             string title;
             bool done = false;
             cin.clear();
@@ -504,6 +517,7 @@ void USERsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTr
                 }
                 else
                 {
+                    cout << endl;
                     Course search;
                     search.setTitle(title);
                     search.setKey(title);
@@ -535,17 +549,17 @@ void USERsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTr
 
 void HashSearch(const HashedDictionary<string, Course> *hashTable)
 {
+    cout<<"* Course Database - Hash Search *"<<endl;
     string courseid;
     bool done = false;
     do {
-        cout << endl << "Enter Course ID (or 'Q' to return to menu): ";
+        cout << endl<<"Enter Course ID (or 'Q' to return to menu): ";
         cin >> courseid;
-        cout << endl;
 
         if (courseid == "Q" || courseid == "q")
             done = true;
         else {
-
+            cout << endl;
             Course search(courseid);
             search.setKey(courseid);
             Course *found;
@@ -554,14 +568,11 @@ void HashSearch(const HashedDictionary<string, Course> *hashTable)
             found = hashTable->getItem(courseid);
             if (found != 0)
             {
-                cout << endl << "Course ID found: "  << "ID: " << found->getCourseid() << endl << "Title: " << found->getTitle() << endl;
-                done = true;
+                cout << "Course ID found: "  << "ID: " << found->getCourseid() << endl << "Title: " << found->getTitle() << endl;
             }
 
             else
-                cout << endl << "Invalid ID, try again." << endl;
-
-
+                cout << "Invalid ID, try again." << endl;
         }
 
     } while (!done);
@@ -580,28 +591,40 @@ void showMenu(CourseDB db)
     do{
         cout << "\nSelect an option: ";
         cin >> option;
-        cout << endl;
+        while (!cin)
+        {
+            cin.clear();
+            cin.ignore();
+            cout << "Invalid input. Enter 'H' to see the menu again.";
+            cout << "\nSelect an option: ";
+            cin >> option;
+        }
+        cout<<endl;
         switch (toupper(option)){
-            case 'C':HASHstatistics(db.getHash());break;
-                //case 'B':BSTbreadthFirst(db.getTree());break;
-            case 'B':BSTprintSortedList(db.getTree(),db.getSecTree());break;
-			case 'L':BSTbreadth(db.getTree()); break;
-			case 'M':BSTpreOrder(db.getTree()); break;
-			case 'N':BSTinOrder(db.getTree()); break;
-			case 'O':BSTpostOrder(db.getTree()); break;
-            case 'T':BSTindentedPrint(db.getTree());break;
-            case 'F':BSTprintFile(db.getTree());break;
-            case 'Q':done = true;BSTprintFile(db.getTree());break;
-            case 'X':BSTdeleteCourse(db.getTree(), db.getSecTree(), db.getHash());break;
-            case 'A':BSTAddCourse(db.getTree(),db.getSecTree(), db.getHash());break;
-            case 'H':showOptions(developerMode!='d');break;
-            case 'S':BSTsearch(db.getTree(),db.getSecTree());break;
-            case 'Z':developerMode = !developerMode; showOptions(developerMode);break;
+            case 'X':USERsearch(db.getTree(),db.getSecTree(),option);break;
             case 'Y':USERsearch(db.getTree(),db.getSecTree(),option);break;
-            case 'V':USERsearch(db.getTree(),db.getSecTree(),option);break;
+            case 'Z':developerMode = !developerMode; showOptions(developerMode);break;
+
+            case 'L':BSTprintSortedList(db.getTree(),db.getSecTree());break;
+			case 'M':BSTbreadth(db.getTree()); break;
+			case 'N':BSTpreOrder(db.getTree()); break;
+			case 'O':BSTinOrder(db.getTree()); break;
+			case 'P':BSTpostOrder(db.getTree()); break;
+            case 'I':BSTindentedPrint(db.getTree());break;
+            case 'B':BSTsearch(db.getTree(),db.getSecTree());break;
+            case 'F':BSTprintFile(db.getTree());break;
+            case 'A':BSTAddCourse(db.getTree(),db.getSecTree(), db.getHash());break;
+            case 'D':BSTdeleteCourse(db.getTree(), db.getSecTree(), db.getHash());break;
+
             //case 'P': db.getHash()->displayHashTableList(displayKey);
-            case 'P': HashPrint(db.getHash());break;
-            case 'D': HashSearch(db.getHash());break;
+            case 'S':HASHstatistics(db.getHash());break;
+                //case 'B':BSTbreadthFirst(db.getTree());break;
+            case 'T':HashPrint(db.getHash());break;
+            case 'U':HashSearch(db.getHash());break;
+
+            case 'H':showOptions(developerMode);break;
+            case 'Q':done = true;BSTprintFile(db.getTree());break;
+
             default:cout << "Invalid input. Enter 'H' to see the menu again." << endl;cin.clear();break;
         }
 
