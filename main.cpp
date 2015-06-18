@@ -162,7 +162,7 @@ void BSTprintFile(const BinarySearchTree<Course> * courseTree){
 void BSTdeleteCourse(BinarySearchTree<Course> * courseTree, BinarySearchTree<Course> * secCourseTree, HashedDictionary <string, Course> * hashTable)
 {
     cout<<"* Course Database - Delete Course *"<<endl<<endl;
-    cout<<"Enter Course ID to delete :";
+    cout<<"Enter Course ID to delete: ";
     string courseid;
     cin>>courseid;
 
@@ -173,7 +173,7 @@ void BSTdeleteCourse(BinarySearchTree<Course> * courseTree, BinarySearchTree<Cou
 	Course foundcourse;
 	if (!courseTree->getEntry(deleteCourse, foundcourse))
 	{
-		cout << "Failed to find course, cannot delete" << endl;
+		cout << "Invalid ID, deletion failed." << endl;
 		return;
 	}
 
@@ -223,7 +223,7 @@ void BSTaddCourse( BinarySearchTree<Course> * courseTree, BinarySearchTree<Cours
     string end_time;
     string location;
 
-    cout<<"Enter course ID(ex:00019): ";
+    cout<<"Enter course ID (ex: 00019): ";
     cin.ignore();
     getline(cin, courseid);
     Course c;
@@ -236,25 +236,25 @@ void BSTaddCourse( BinarySearchTree<Course> * courseTree, BinarySearchTree<Cours
         return;     // end function if a match was found
     }
 
-    cout<<"Enter class key(ex:ANTH001.02): ";
+    cout<<"Enter class key (ex: ANTH001.02): ";
     getline(cin, classkey);
 
-    cout<<"Enter title(ex:WOMEN IN LITERATURE): ";
+    cout<<"Enter title (ex: WOMEN IN LITERATURE): ";
     getline(cin, title);
 
-    cout<<"Enter instructor(ex:Andrade, Claudia): ";
+    cout<<"Enter instructor (ex: Andrade, Claudia): ";
     getline(cin, instructor);
 
-    cout<<"Enter days(ex:MTWRF): ";
+    cout<<"Enter days (ex: MTWRF): ";
     getline(cin, days);
 
-    cout<<"Enter Start Time(ex:1000): ";
+    cout<<"Enter Start Time (ex: 1000): ";
     getline(cin, start_time);
 
-    cout<<"Enter End Time(ex:1225): ";
+    cout<<"Enter End Time (ex: 1225): ";
     getline(cin, end_time);
 
-    cout<<"Enter location(ex:MLC102): ";
+    cout<<"Enter location (ex: MLC102): ";
     getline(cin, location);
     cout << endl;
 
