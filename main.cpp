@@ -282,7 +282,7 @@ void BSTprintSortedList(const BinarySearchTree<Course> * courseTree,const Binary
     cout<<"Sort list by..." << endl;
     cout<<"\tX - Course ID"<<endl;
     cout<<"\tY - Title"<<endl;
-    cout << endl << "Select an option: ";
+    cout << endl << "Select an option (or 'Q' to return to menu): ";
     char input;
     cin>>input;
     while (!cin || (tolower(input)!='x' && tolower(input)!='y' && tolower(input)!='q'))
@@ -309,7 +309,7 @@ void BSTsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTre
     cout<<"\tX - Course ID (BST)"<<endl;
     cout<<"\tY - Title (BST)"<<endl;
     //cout<<"H - HashTable "<<endl;
-    cout << endl << "Select an option: ";
+    cout << endl << "Select an option (or 'Q' to return to menu): ";
     cin.ignore();
 
     cin>>searchoption;
@@ -444,7 +444,7 @@ void HashPrint(const HashedDictionary<string, Course> *hashTable)
     cout<<"\tF - Full Table"<<endl;
     cout<<"\tI - Items"<<endl;
 
-    cout << endl << "Select an option: ";
+    cout << endl << "Select an option (or 'Q' to return to menu): ";
     cin>>input;
 
     while (!cin || (tolower(input)!='f' && tolower(input)!='i' && tolower(input)!='q'))
