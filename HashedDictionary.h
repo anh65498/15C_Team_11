@@ -93,28 +93,20 @@ int HashedDictionary<KeyType,ItemType>::getHashIndex(const KeyType& searchKey) c
 
 // getHashIndex: hash function for the unique key, uses first 6 chars of string and sums the numerical equivalents of each character and
 // uses modulo division with table size to produce index
-
 template <class KeyType, class ItemType>
-int HashedDictionary<KeyType, ItemType>::getHashIndex(const KeyType& searchKey) const
-{
+int HashedDictionary<KeyType, ItemType>::getHashIndex(const KeyType& searchKey) const{
 	int sum = 0;
 	int zeroes = 0;
 	int ones = 0;
-	for (int i = 0; i < searchKey.length(); i++)
-	{
-		if (searchKey[i] == '0') zeroes++;
-		if (searchKey[i] == '1') ones++;
-		 if(i!=0)
-		 sum += (searchKey[i] * searchKey[i] * searchKey[i])*i;
-
-		 //sum += (searchKey[i] * searchKey[i] * searchKey[i]);
+	for ( int i = 0; i < searchKey.length(); i++ ){
+		if ( searchKey[i] == '0' ) zeroes++;
+		if ( searchKey[i] == '1' ) ones++;
+		if( i != 0 ) sum += ( searchKey[i] * searchKey[i] * searchKey[i] ) * i;
+		else sum += ( searchKey[i] * searchKey[i] * searchKey[i] );
 	}
-    if(zeroes != 0)
-	sum *= zeroes; //480 to 371 collisions
-	if (ones != 0)
-	sum *= ones; //371 to 227 collisions
+	if ( zeroes != 0 ) sum *= zeroes;
+	if ( ones != 0 ) sum *= ones; 
 	sum = sum % tableSize;
-    //cout<<"HashIndex is "<<sum<<" "<<searchKey<<endl;
 	return sum;
 }
 
