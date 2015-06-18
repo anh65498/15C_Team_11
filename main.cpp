@@ -605,7 +605,6 @@ void showMenu(CourseDB db)
     bool developerMode = false;
     char option;
     string courseid;
-    cout << "\nWelcome to the Summer 2015 De Anza Course Database" << endl<<endl;
 
     showOptions(developerMode);
     do{
@@ -666,8 +665,9 @@ void splashScreen()
 int main()
 {
     splashScreen();
-    cout<<"Press any key to continue...";cin.get();
-    cin.clear();cout<<endl;
+    cout << "\n\tWelcome to the Summer 2015 De Anza Course Database" << endl;
+    cout<< "\t\tPress any key to continue...";
+    cin.get();cin.clear();cout<<endl;
     CourseDB db("courses.txt",BUCKETSIZE);
     // sample usage of rehashing
 
