@@ -345,7 +345,7 @@ void BSTsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTre
                     bool success = courseTree->getEntry(search, found);
                     if (success)
                     {
-                        cout << endl << "Course ID found: "  << "ID: " << found.getCourseid() << endl << "Title: " << found.getTitle() << endl;
+                        cout << endl << "Course ID found:\n"  << found;
                     }
 
                     else
@@ -503,7 +503,7 @@ void USERsearch(const BinarySearchTree<Course> * courseTree,const BinarySearchTr
                     bool success = courseTree->getEntry(search, found);
                     if (success)
                     {
-                        cout << endl << "Course ID found: "  << "ID: " << found.getCourseid() << endl << "Title: " << found.getTitle() << endl;
+                        cout << endl << "Course ID found:\n"  << found;
                     }
                     else
                         cout << endl << "Invalid ID, try again." << endl;
@@ -581,7 +581,7 @@ void HashSearch(const HashedDictionary<string, Course> *hashTable)
             found = hashTable->getItem(courseid);
             if (found != 0)
             {
-                cout << "Course ID found: "  << "ID: " << found->getCourseid() << endl << "Title: " << found->getTitle() << endl;
+                cout << "Course ID found:\n" << *found;
             }
 
             else
@@ -641,7 +641,7 @@ void showMenu(CourseDB db)
             case 'U':HashSearch(db.getHash());break;
 
             case 'H':showOptions(developerMode);break;
-            case 'Q':done = true;BSTprintFile(db.getTree());break;
+            case 'Q':cin.clear();cin.ignore();done = true;BSTprintFile(db.getTree());cout<<"Press any key to finish...";cin.get();break;
 
             case 'W':displayCredits();break;
 
@@ -651,8 +651,23 @@ void showMenu(CourseDB db)
     } while (!done);
 }
 
+void splashScreen()
+{
+    ifstream splash;
+    splash.open("ascii.txt");
+    string tempLine;
+    while(getline(splash, tempLine))
+    {
+        cout << tempLine << endl;
+    }
+    splash.close();
+}
+
 int main()
 {
+    splashScreen();
+    cout<<"Press any key to continue...";cin.get();
+    cin.clear();cin.ignore();
     CourseDB db("courses.txt",BUCKETSIZE);
     // sample usage of rehashing
 

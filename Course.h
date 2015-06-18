@@ -118,7 +118,7 @@ public:
     // overloads << operator
     friend ostream & operator<<(ostream &o, const Course& c)
     {
-        o << c.courseid << ";" << c.classkey << ";" << c.title << ";" << c.instructor << ";" << c.days << ";" << c.start_time << ";" << c.end_time << ";" << c.location<< endl;
+        o << c.courseid << " " << c.classkey << "; " << c.title << "; " << c.instructor << "; " << c.days << " " << c.start_time << "-" << c.end_time << "; " << c.location<< endl;
         return o;
     }
 

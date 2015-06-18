@@ -71,9 +71,6 @@ public:
 
 	bool remove(const KeyType &target, ItemType& removeItem);
 
-
-
-
 };
 
 // getHashIndex: hash function for the unique key, uses first 6 chars of string and sums the numerical equivalents of each character and
@@ -105,7 +102,7 @@ int HashedDictionary<KeyType, ItemType>::getHashIndex(const KeyType& searchKey) 
 		else sum += ( searchKey[i] * searchKey[i] * searchKey[i] );
 	}
 	if ( zeroes != 0 ) sum *= zeroes;
-	if ( ones != 0 ) sum *= ones; 
+	if ( ones != 0 ) sum *= ones;
 	sum = sum % tableSize;
 	return sum;
 }
