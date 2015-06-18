@@ -605,6 +605,7 @@ void showMenu(CourseDB db)
     bool developerMode = false;
     char option;
     string courseid;
+    cout<<endl;
 
     showOptions(developerMode);
     do{
