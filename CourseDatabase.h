@@ -18,13 +18,13 @@ private:
     int tableSize;
     int bucketSize;
 	int threshold;
-    
+
     BinarySearchTree<Course>* courseTree;
     HashedDictionary<string,Course> *hashTable;
     BinarySearchTree<Course>* secCourseTree;
     int getFileLines(string);
     int closestPrime(int);
-    
+
 
 public:
 	CourseDB() {}
@@ -34,7 +34,7 @@ public:
     BinarySearchTree<Course>* getSecTree(){return secCourseTree;}
     HashedDictionary<string,Course>* getHash(){return hashTable;}
     void rehashHashTable(const HashedDictionary<string,Course> *oldHashTable,int newSize ,int newBucketSize);
-    
+
 };
 
 int CourseDB::getFileLines(string file){
@@ -64,7 +64,7 @@ bool IsPrime(int number){
         if (number % (divisor + 1) == 0)
             return false;
         divisor += 6;
-        
+
     }
     return true;
 }
@@ -85,59 +85,59 @@ CourseDB::CourseDB(string fileName, int buckets)
     courseTree = new BinarySearchTree < Course > ;
     secCourseTree = new BinarySearchTree < Course > ;
     hashTable = new HashedDictionary < string, Course >(tableSize,bucketSize);
-    
+
     ifstream infile;
     infile.open(fileName.c_str());
     if (!infile){cout << "Error opening input file " << endl;return;}
     string line;
     while (getline(infile, line)){
         string courseid = "";
-        string crn;
+        string classkey;
         string title;
         string instructor;
         string days;
         string start_time;
         string end_time;
         string location;
-        
+
         //10286;ACCT001A03;FINAN ACCOUNTNG I;Breen, Mary A.;MTWR;1000;1215;G6
         //courseid,crn,title,instructor,days,start_time,end_time,location
-        
+
         int index = line.find(';');
         int start = 0;
         courseid = line.substr(0, index);
         start = index + 1;
-        
+
         index = line.find(';', index + 1);
-        crn = line.substr(start, index - start);
+        classkey = line.substr(start, index - start);
         start = index + 1;
-        
+
         index = line.find(';', index + 1);
         title = line.substr(start, index - start);
         start = index + 1;
-        
-        
+
+
         index = line.find(';', index + 1);
         instructor = line.substr(start, index - start);
         start = index + 1;
-        
+
         index = line.find(';', index + 1);
         days = line.substr(start, index - start);
-        
+
         start = index + 1;
-        
+
         index = line.find(';', index + 1);
         start_time = line.substr(start, index - start);
         start = index + 1;
-        
+
         index = line.find(';', index + 1);
         end_time = line.substr(start, index - start);
         start = index + 1;
-        
+
         index = line.find(';', index + 1);
         location = line.substr(start, index - start);
         start = index + 1;
-        
+
 		//working code:
 
        /* Course c;
@@ -151,7 +151,7 @@ CourseDB::CourseDB(string fileName, int buckets)
         c.setEndTime(end_time);
         c.setKey(courseid);
         //BinaryNode<Course> *newNode = new BinaryNode<Course>(c);
-        
+
         courseTree->insert(c);
         //hashTable->add(newNode->getItem().getCourseid(),newNode);
         hashTable->add(courseid,c);
@@ -162,7 +162,7 @@ CourseDB::CourseDB(string fileName, int buckets)
 		Course *c = new Course();
 		c->setCourseid(courseid);
 		c->setInstructor(instructor);
-		c->setCrn(crn);
+		c->setClassKey(classkey);
 		c->setTitle(title);
 		c->setLocation(location);
 		c->setDays(days);
@@ -177,18 +177,19 @@ CourseDB::CourseDB(string fileName, int buckets)
 		c->setKey(title);
 		secCourseTree->insert(*c);
 
-		int loadfactor = hashTable->getLoadFactor();
-		if (loadfactor > 80)
-		{
-			cout << "Load Factor is  "<<loadfactor<<"% which is greater than "<<threshold<<"%"<< endl;
-			tableSize = closestPrime(tableSize * 2);
-			cout << "Rehashing with Table Size: " << tableSize << endl;
-			rehashHashTable(hashTable, tableSize, buckets);
-			//cout << "Load Factor After Rehash: " << hashTable->getLoadFactor() <<"%"<< endl;
-		}
-        
+        int loadfactor = hashTable->getLoadFactor();
+        if (loadfactor > 80)
+        {
+            tableSize = closestPrime(tableSize * 1.3);
+            rehashHashTable(hashTable, tableSize, buckets);
+            hashTable->updateTableSize(tableSize);
+            loadfactor = hashTable->getLoadFactor();
+            cout << "Rehashing to " << tableSize << " size... \n";
+        }
+
     }
-	cout << "Load Factor After Rehash: " << hashTable->getLoadFactor() << "%" << endl;
+
+
     infile.close();
 }
 
