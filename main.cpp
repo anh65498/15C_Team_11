@@ -667,7 +667,7 @@ int main()
 {
     splashScreen();
     cout<<"Press any key to continue...";cin.get();
-    cin.clear();cin.ignore();
+    cin.clear();cout<<endl;
     CourseDB db("courses.txt",BUCKETSIZE);
     // sample usage of rehashing
 
