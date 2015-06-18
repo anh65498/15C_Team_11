@@ -107,7 +107,7 @@ double HashedDictionary<KeyType,ItemType>::getLoadFactor()
     // Number of non-empty buckets/tablesize
     int num = tableSize-getNumOfEmptyBuckets();
 
-    double loadFactor = ((num)/static_cast<double>(tableSize))*100;
+    double loadFactor = ((num)/static_cast<double>(tableSize))*100.0;
 
     return loadFactor;
 }

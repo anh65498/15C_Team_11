@@ -139,14 +139,14 @@ void HashStatistics( HashedDictionary<string,Course> *hashTable){
     int empty = hashTable->getNumOfEmptyBuckets();
 
     cout<<"* Course Database - Statistics *"<<endl<<endl;
-    cout<<"\tNumber of items:"<<hashTable->getItemCount()<<endl;
-    cout<<"\tNumber of buckets:"<<hashTable->getBucketSize()<<endl;
-    cout<<"\tSize of table:"<<hashTable->getTableSize()<<endl;
+    cout<<"\tNumber of items: "<<hashTable->getItemCount()<<endl;
+    cout<<"\tNumber of buckets: "<<hashTable->getBucketSize()<<endl;
+    cout<<"\tSize of table: "<<hashTable->getTableSize()<<endl;
     cout<<"\tTotal number of Collisions: " << hashTable->getColissions() << endl;
     cout<<"\tLoad Factor: " << hashTable->getLoadFactor() << "%" << endl;
-    cout<<"\tNumber of Full Buckets:  "<<full<<endl;
-    cout<<"\tNumber of Empty Buckets:  "<<empty<<endl;
-    cout<<"\tAverage Number of nodes stored per bucket: "<<hashTable->getAverageNumofNodes()<<endl;
+    cout<<"\tNumber of Full Buckets: "<<full<<endl;
+    cout<<"\tNumber of Empty Buckets: "<<empty<<endl;
+    cout<<"\tAverage Number of Nodes Stored per Bucket: "<<hashTable->getAverageNumofNodes()<<endl;
     cout<<"\tOverflow: " << hashTable->getOverflow()<<endl;
 }
 
