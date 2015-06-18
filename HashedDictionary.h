@@ -93,16 +93,9 @@ int HashedDictionary<KeyType,ItemType>::getHashIndex(const KeyType& searchKey) c
 template <class KeyType, class ItemType>
 int HashedDictionary<KeyType, ItemType>::getHashIndex(const KeyType& searchKey) const{
 	int sum = 0;
-	int zeroes = 0;
-	int ones = 0;
 	for ( int i = 0; i < searchKey.length(); i++ ){
-		if ( searchKey[i] == '0' ) zeroes++;
-		if ( searchKey[i] == '1' ) ones++;
-		if( i != 0 ) sum += ( searchKey[i] * searchKey[i] * searchKey[i] ) * i;
-		else sum += ( searchKey[i] * searchKey[i] * searchKey[i] );
+		sum += ( searchKey[i] * searchKey[i] * searchKey[i] ) * (i+1);
 	}
-	if ( zeroes != 0 ) sum *= zeroes;
-	if ( ones != 0 ) sum *= ones;
 	sum = sum % tableSize;
 	return sum;
 }
