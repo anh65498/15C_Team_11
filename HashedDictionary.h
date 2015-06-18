@@ -274,6 +274,8 @@ bool HashedDictionary<KeyType,ItemType>::add(const KeyType& searchKey, const Ite
     {
         if(hashTable[hashIndex]->getCount() == bucketSize)
         {
+            ofstream outfile("rejected.txt", ios::app);
+            outfile << searchKey << endl;
             overflow++;
             return false;
         }
