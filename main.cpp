@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 //test driver for bst course  tree
 //rohan
 
