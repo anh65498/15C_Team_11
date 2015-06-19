@@ -73,7 +73,7 @@ public:
     // overloads > operator
     bool operator >(const Course & d)
     {
-        if (key > d.key)
+        if (key > d.courseid)
             return true;
         else
             return false;
@@ -82,7 +82,7 @@ public:
     // overloads < operator
     bool operator <(const Course & d)
     {
-        if (key < d.key)
+        if (key < d.courseid)
             return true;
         else
             return false;
@@ -91,7 +91,7 @@ public:
     // overloads == operator
     bool operator ==(const Course& d)
     {
-        if (key == d.key)
+        if (key == d.courseid)
             return true;
         else
             return false;
@@ -100,7 +100,7 @@ public:
     // overloads >= operator
     bool operator >=(const Course & d)
     {
-        if (key >= d.key)
+        if (key >= d.courseid)
             return true;
         else
             return false;
@@ -109,7 +109,7 @@ public:
     // overloads <= operator
     bool operator <=(const Course & d)
     {
-        if (key <= d.key)
+        if (key <= d.courseid)
             return true;
         else
             return false;
